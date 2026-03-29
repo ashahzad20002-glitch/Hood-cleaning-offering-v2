@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useRef, createContext, useContext, useCallback } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { 
   CheckCircle, ChevronRight, ChevronLeft, ArrowRight, 
   TrendingUp, Star, Quote, 
   Menu, X, Check, ArrowUpRight, Target, MapPin, Loader2, AlertCircle,
   Building2, Utensils, School, Hospital, ChefHat, Store,
   Package, Filter, Zap, MessageSquare, Calendar, BarChart3,
-  Lock, Phone, Mail, Globe, Home
+  Lock, Phone, Mail, Globe, Home,
+  MessageCircle, FileText, RefreshCw, CheckCircle2, Maximize2, Search, Minus, Plus
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
@@ -86,18 +87,21 @@ const WhatsAppButton = () => {
   );
 };
 
-const Reveal = ({ children, delay = 0, className = "", onClick }: { children: React.ReactNode, delay?: number, className?: string, key?: React.Key, onClick?: () => void }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 16 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 0.7, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
-    className={className}
-    onClick={onClick}
-  >
-    {children}
-  </motion.div>
-);
+const Reveal = ({ children, delay = 0, className = "", onClick, as = "div" }: { children: React.ReactNode, delay?: number, className?: string, key?: React.Key, onClick?: () => void, as?: any }) => {
+  const MotionComponent = motion[as as keyof typeof motion] as any;
+  return (
+    <MotionComponent
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.7, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className={className}
+      onClick={onClick}
+    >
+      {children}
+    </MotionComponent>
+  );
+};
 
 const CallToAction = ({ text = "Book a Call", className = "" }: { text?: string, className?: string }) => (
   <div className={`mt-10 md:mt-12 text-center ${className}`}>
@@ -105,7 +109,7 @@ const CallToAction = ({ text = "Book a Call", className = "" }: { text?: string,
       href="https://calendly.com/adil_shahzad_khawaja/30min" 
       target="_blank" 
       rel="noopener noreferrer" 
-      className="inline-flex items-center gap-2 bg-gradient-to-r from-[#f59e0b] to-[#fcd34d] text-slate-950 px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-[0_0_30px_rgba(245,197,94,0.25)] text-sm md:text-base"
+      className="inline-flex items-center gap-2 bg-gradient-to-r from-[#f59e0b] to-[#fcd34d] text-slate-950 px-6 py-3 rounded-xl font-bold hover:scale-105 hover:shadow-lg active:scale-95 transition-all shadow-[0_0_30px_rgba(245,197,94,0.25)] text-sm md:text-base"
     >
       {text} <ArrowRight size={18} />
     </a>
@@ -189,7 +193,7 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-xs leading-tight">Contract Engine</span>
-            <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Commercial Hood Cleaning</span>
+            <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Recurring commercial contracts</span>
           </div>
         </a>
         <div className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-300">
@@ -199,11 +203,11 @@ const Navbar = () => {
           <a href="#pricing" className="relative hover:text-white transition-colors after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-amber-400 after:to-amber-200 after:transition-all after:duration-300 hover:after:w-full">Pricing</a>
         </div>
         <div className="hidden md:block">
-          <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-4 py-2 rounded-lg font-bold text-xs hover:scale-105 transition-transform inline-block shadow-[0_0_20px_rgba(245,197,94,0.2)]">
+          <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-4 py-2 rounded-lg font-bold text-xs hover:scale-105 hover:shadow-lg active:scale-95 transition-all inline-block shadow-[0_0_20px_rgba(245,197,94,0.2)]">
             Check Availability
           </a>
         </div>
-        <button className="md:hidden text-slate-300" onClick={() => setIsOpen(!isOpen)}>
+        <button aria-label="Toggle menu" aria-expanded={isOpen} className="md:hidden text-slate-300" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
@@ -225,6 +229,9 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile Navigation Menu"
               className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm z-[60] md:hidden bg-[#06101d] border-l border-slate-800/50 flex flex-col shadow-2xl"
             >
               {/* Mobile Header */}
@@ -235,10 +242,11 @@ const Navbar = () => {
                   </div>
                   <div className="flex flex-col">
                     <span className="font-bold text-xs uppercase tracking-widest text-white">Menu</span>
-                    <span className="text-[8px] text-slate-500 font-bold uppercase tracking-tighter">Navigation</span>
+                    <span className="text-[8px] text-slate-400 font-bold uppercase tracking-tighter">Navigation</span>
                   </div>
                 </div>
                 <button 
+                  aria-label="Close menu"
                   className="flex items-center gap-2 text-slate-400 p-2 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all group" 
                   onClick={() => setIsOpen(false)}
                 >
@@ -274,9 +282,9 @@ const Navbar = () => {
                         </div>
                         <div className="flex flex-col">
                           <span className="text-base font-bold text-slate-100 group-hover:text-amber-400 transition-colors">{item.name}</span>
-                          <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider line-clamp-1">{item.desc}</span>
+                          <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider line-clamp-1">{item.desc}</span>
                         </div>
-                        <ChevronRight size={14} className="ml-auto text-slate-700 group-hover:text-amber-400 transition-colors" />
+                        <ChevronRight size={14} className="ml-auto text-slate-500 group-hover:text-amber-400 transition-colors" />
                       </motion.a>
                     ))}
                   </div>
@@ -303,7 +311,7 @@ const Navbar = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.5 }}
-                      className="flex items-center justify-center gap-4 text-slate-500 text-[9px] font-bold uppercase tracking-[0.2em]"
+                      className="flex items-center justify-center gap-4 text-slate-400 text-[9px] font-bold uppercase tracking-[0.2em]"
                     >
                       <span>Exclusive</span>
                       <div className="w-1 h-1 rounded-full bg-slate-700" />
@@ -321,7 +329,7 @@ const Navbar = () => {
                         <Mail size={18} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Email Us</span>
+                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Email Us</span>
                         <span className="text-xs font-bold text-slate-200">adil@epulsedigital.com</span>
                       </div>
                     </div>
@@ -330,7 +338,7 @@ const Navbar = () => {
                         <Globe size={18} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Website</span>
+                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Website</span>
                         <span className="text-xs font-bold text-slate-200">epulsedigital.com</span>
                       </div>
                     </div>
@@ -345,7 +353,7 @@ const Navbar = () => {
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">System Online</span>
                   </div>
-                  <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">v2.4.0</span>
+                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">v2.4.0</span>
                 </div>
               </div>
             </motion.div>
@@ -359,7 +367,7 @@ const Navbar = () => {
 const TerritoryMap = () => {
   const zones = [
     { 
-      id: 'north', name: 'North District', status: 'Available', kitchens: 342, value: '$12.5k/mo', 
+      id: 'north', name: 'North District', status: 'Available', facilities: 342, value: '$12.5k/mo', 
       path: 'M 40,20 L 100,10 L 150,30 L 130,80 L 80,90 L 30,60 Z', center: [85, 45],
       history: [
         { day: 'Mon', price: 11200 }, { day: 'Tue', price: 11500 }, { day: 'Wed', price: 11800 }, 
@@ -367,7 +375,7 @@ const TerritoryMap = () => {
       ]
     },
     { 
-      id: 'east', name: 'East District', status: 'Taken', kitchens: 512, value: '$18.2k/mo', 
+      id: 'east', name: 'East District', status: 'Taken', facilities: 512, value: '$18.2k/mo', 
       path: 'M 150,30 L 210,40 L 230,100 L 170,140 L 130,80 Z', center: [175, 85],
       history: [
         { day: 'Mon', price: 16500 }, { day: 'Tue', price: 16800 }, { day: 'Wed', price: 17200 }, 
@@ -375,7 +383,7 @@ const TerritoryMap = () => {
       ]
     },
     { 
-      id: 'south', name: 'South District', status: 'Available', kitchens: 289, value: '$9.8k/mo', 
+      id: 'south', name: 'South District', status: 'Available', facilities: 289, value: '$9.8k/mo', 
       path: 'M 80,90 L 130,80 L 170,140 L 120,190 L 60,160 Z', center: [110, 135],
       history: [
         { day: 'Mon', price: 8500 }, { day: 'Tue', price: 8700 }, { day: 'Wed', price: 9000 }, 
@@ -383,7 +391,7 @@ const TerritoryMap = () => {
       ]
     },
     { 
-      id: 'west', name: 'West District', status: 'Available', kitchens: 415, value: '$15.1k/mo', 
+      id: 'west', name: 'West District', status: 'Available', facilities: 415, value: '$15.1k/mo', 
       path: 'M 30,60 L 80,90 L 60,160 L 10,120 L 15,70 Z', center: [40, 100],
       history: [
         { day: 'Mon', price: 13500 }, { day: 'Tue', price: 13800 }, { day: 'Wed', price: 14200 }, 
@@ -400,13 +408,7 @@ const TerritoryMap = () => {
 
   const handleClaim = () => {
     setIsModalOpen(true);
-    setClaimStatus('processing');
-    
-    // Simulate processing with a chance of failure
-    setTimeout(() => {
-      const isSuccess = Math.random() > 0.15; // 85% success rate
-      setClaimStatus(isSuccess ? 'success' : 'failure');
-    }, 2000);
+    setClaimStatus('idle');
   };
 
   return (
@@ -444,7 +446,13 @@ const TerritoryMap = () => {
                     }
                   }
                 }}
-                onClick={() => !isTaken && setActiveZone(zone)} 
+                onClick={() => {
+                  if (!isTaken) {
+                    setActiveZone(zone);
+                    setIsModalOpen(true);
+                    setClaimStatus('idle');
+                  }
+                }} 
                 className={`transition-all duration-300 ${
                   isTaken 
                     ? 'cursor-not-allowed hover:opacity-60' 
@@ -468,7 +476,7 @@ const TerritoryMap = () => {
                   <g transform={`translate(${zone.center[0] - 6}, ${zone.center[1] - 6})`}>
                     <circle cx="6" cy="6" r="8" className="fill-slate-900/50 stroke-slate-700/50" strokeWidth="0.5" />
                     <foreignObject width="12" height="12">
-                      <div className="flex items-center justify-center w-full h-full text-slate-500">
+                      <div className="flex items-center justify-center w-full h-full text-slate-400">
                         <Lock size={8} />
                       </div>
                     </foreignObject>
@@ -530,9 +538,9 @@ const TerritoryMap = () => {
         
         <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-700/50 mb-4">
           <div>
-            <div className="text-[9px] text-slate-400 mb-1">Commercial Kitchens</div>
+            <div className="text-[9px] text-slate-400 mb-1">Commercial Facilities</div>
             <div className="text-white font-semibold flex items-center gap-1 text-xs">
-              <Target size={12} className="text-amber-400"/> {activeZone.kitchens}
+              <Target size={12} className="text-amber-400"/> {activeZone.facilities}
             </div>
           </div>
           <div>
@@ -544,7 +552,7 @@ const TerritoryMap = () => {
         </div>
 
         <div className="h-24 w-full bg-slate-900/40 rounded-xl p-2 border border-slate-700/30 mb-4">
-          <div className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1 px-1">7-Day Value Trend</div>
+          <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1 px-1">7-Day Value Trend</div>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={activeZone.history}>
               <defs>
@@ -610,8 +618,8 @@ const TerritoryMap = () => {
           }
           className={`w-full mt-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 ${
             activeZone.status === 'Taken' 
-              ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
-              : 'bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 hover:scale-[1.02] shadow-[0_0_20px_rgba(245,197,94,0.2)]'
+              ? 'bg-slate-800 text-slate-400 cursor-not-allowed' 
+              : 'bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 hover:scale-[1.02] hover:shadow-lg active:scale-95 shadow-[0_0_20px_rgba(245,197,94,0.2)]'
           }`}
         >
           {activeZone.status === 'Taken' ? 'Territory Unavailable' : 'Claim Territory'} <ArrowRight size={14} className={activeZone.status === 'Taken' ? 'hidden' : 'block'} />
@@ -630,15 +638,60 @@ const TerritoryMap = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-title"
               className="glass-panel max-w-md w-full rounded-3xl p-6 relative border-slate-700/50 shadow-2xl"
             >
-              {claimStatus === 'success' || claimStatus === 'failure' ? (
-                <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white hover:scale-110 hover:rotate-90 transition-all duration-300">
+              {claimStatus === 'idle' || claimStatus === 'success' || claimStatus === 'failure' ? (
+                <button aria-label="Close modal" onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white hover:scale-110 hover:rotate-90 transition-all duration-300">
                   <X size={18} />
                 </button>
               ) : null}
 
-              {claimStatus === 'processing' ? (
+              {claimStatus === 'idle' ? (
+                <div className="py-2">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 id="modal-title" className="text-2xl font-bold text-white">{activeZone.name}</h3>
+                    <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                      Available
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                      <div className="text-slate-400 text-xs mb-1">Est. Value</div>
+                      <div className="text-xl font-bold text-amber-400">${(activeZone.value / 1000).toFixed(1)}k/mo</div>
+                    </div>
+                    <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                      <div className="text-slate-400 text-xs mb-1">Commercial Facilities</div>
+                      <div className="text-xl font-bold text-white">{activeZone.facilities}</div>
+                    </div>
+                    <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                      <div className="text-slate-400 text-xs mb-1">Competition Level</div>
+                      <div className="text-xl font-bold text-white">{activeZone.competition}</div>
+                    </div>
+                    <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                      <div className="text-slate-400 text-xs mb-1">Population</div>
+                      <div className="text-xl font-bold text-white">{(activeZone.facilities * 1250).toLocaleString()}</div>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={() => {
+                      setClaimStatus('processing');
+                      setTimeout(() => {
+                        const isSuccess = Math.random() > 0.15;
+                        setClaimStatus(isSuccess ? 'success' : 'failure');
+                      }, 2000);
+                    }}
+                    className="w-full py-4 bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 rounded-xl font-bold transition-all hover:scale-[1.02] hover:shadow-lg active:scale-95 text-center text-sm shadow-[0_0_20px_rgba(245,197,94,0.2)]"
+                  >
+                    Claim This Territory
+                  </button>
+                </div>
+              ) : claimStatus === 'processing' ? (
                 <div className="text-center py-6">
                   <Loader2 className="w-10 h-10 text-amber-400 animate-spin mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-white mb-2">Securing Territory...</h3>
@@ -669,7 +722,7 @@ const TerritoryMap = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setIsModalOpen(false)} 
-                    className="block w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-colors border border-slate-600 text-center text-sm"
+                    className="block w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-all hover:scale-[1.02] hover:shadow-lg active:scale-95 border border-slate-600 text-center text-sm"
                   >
                     Continue
                   </a>
@@ -686,7 +739,7 @@ const TerritoryMap = () => {
                   </p>
                   <button 
                     onClick={handleClaim}
-                    className="block w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl font-bold transition-colors text-center text-sm"
+                    className="block w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl font-bold transition-all hover:scale-[1.02] hover:shadow-lg active:scale-95 text-center text-sm"
                   >
                     Try Again
                   </button>
@@ -701,13 +754,18 @@ const TerritoryMap = () => {
 };
 
 const Hero = () => {
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
+  const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
+  const y3 = useTransform(scrollY, [0, 1000], [0, 100]);
+
   return (
     <section className="pt-12 pb-10 md:pb-12 px-6 relative overflow-hidden" id="top">
       {/* Dynamic Background Elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <motion.div 
+          style={{ y: y1 }}
           animate={{ 
-            y: [0, -20, 0],
             x: [0, 10, 0],
             scale: [1, 1.1, 1]
           }}
@@ -719,8 +777,8 @@ const Hero = () => {
           className="absolute -top-20 -left-20 w-96 h-96 bg-amber-500/5 rounded-full blur-[100px]"
         />
         <motion.div 
+          style={{ y: y2 }}
           animate={{ 
-            y: [0, 30, 0],
             x: [0, -15, 0],
             scale: [1, 1.2, 1]
           }}
@@ -732,7 +790,10 @@ const Hero = () => {
           }}
           className="absolute top-1/2 -right-20 w-80 h-80 bg-blue-500/5 rounded-full blur-[100px]"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"></div>
+        <motion.div 
+          style={{ y: y3 }}
+          className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"
+        />
         
         {/* Scanning Line Animation */}
         <motion.div 
@@ -744,17 +805,17 @@ const Hero = () => {
 
       <div className="max-w-5xl mx-auto flex flex-col items-center text-center">
         <Reveal className="flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 text-amber-400 text-[10px] font-bold tracking-wide uppercase mb-4">
-            <Target size={12} /> For commercial hood cleaning operators
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 text-amber-400 text-xs font-bold tracking-wide uppercase mb-4">
+            <Target size={12} /> For commercial service operators
           </div>
-          <h1 className="text-3xl md:text-4xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 text-balance text-white">
+          <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-black leading-[1.1] tracking-tight mb-6 text-balance text-white">
             Turn your service area into a <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">predictable source</span> of recurring contracts.
           </h1>
-          <p className="text-sm md:text-lg text-slate-300 mb-8 max-w-2xl leading-relaxed">
-            We help established hood cleaning companies generate qualified walkthrough requests from real commercial kitchens, follow up faster, and protect renewals so revenue does not leak after the first sale.
+          <p className="text-lg md:text-2xl text-slate-300 mb-8 max-w-3xl leading-relaxed">
+            We help commercial service companies generate stronger B2B opportunities, follow up faster, and convert more quotes into recurring facility accounts.
           </p>
           
-          <div className="flex flex-wrap justify-center gap-2 mb-8 text-[10px] md:text-[11px] text-slate-300 font-medium">
+          <div className="flex flex-wrap justify-center gap-2 mb-8 text-sm md:text-base text-slate-300 font-medium">
             {[
               "Paid demand engine",
               "Faster quote follow-up",
@@ -772,16 +833,16 @@ const Hero = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-10 w-full sm:w-auto">
-            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-8 py-4 rounded-xl font-bold hover:scale-105 transition-transform shadow-[0_0_30px_rgba(245,197,94,0.25)] flex items-center justify-center gap-2 text-sm md:text-base">
+            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-8 py-4 rounded-xl font-bold hover:scale-105 hover:shadow-lg active:scale-95 transition-all shadow-[0_0_30px_rgba(245,197,94,0.25)] flex items-center justify-center gap-2 text-sm md:text-base">
               Check Territory Availability
             </a>
-            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-slate-800/50 border border-slate-700 hover:bg-slate-800 transition-colors text-white flex items-center justify-center gap-2 text-sm md:text-base">
+            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:scale-105 hover:shadow-lg active:scale-95 transition-all text-white flex items-center justify-center gap-2 text-sm md:text-base">
               Book Strategy Call
             </a>
           </div>
           
-          <p className="text-[10px] text-slate-400 mb-10 max-w-lg leading-relaxed mx-auto">
-            We only partner with one hood cleaning company per territory. If your market is already taken, we will tell you before onboarding.
+          <p className="text-xs text-slate-400 mb-10 max-w-lg leading-relaxed mx-auto">
+            We partner with exclusive commercial service providers per territory to ensure maximum market share and dedicated support. If your market is already taken, we will tell you before onboarding.
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mb-16">
@@ -827,9 +888,9 @@ const TrustedBy = () => {
   const duplicatedLogos = [...logos, ...logos, ...logos, ...logos];
 
   return (
-    <section className="py-8 md:py-10 border-y border-slate-800/50 bg-[#06101d]/50 overflow-hidden">
+    <section className="py-8 md:py-10 border-t border-slate-800/50 bg-[#06101d]/50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-6 text-center">
-        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Trusted by commercial kitchens across the country</p>
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Trusted by commercial facilities across the country</p>
       </div>
       <div className="relative flex overflow-hidden group">
         {/* Gradient overlays for smooth fade on edges */}
@@ -838,13 +899,222 @@ const TrustedBy = () => {
         
         <div className="flex space-x-10 md:space-x-20 animate-marquee items-center px-6 md:px-12">
           {duplicatedLogos.map((logo, i) => (
-            <div key={i} className="flex items-center gap-3 md:gap-4 text-slate-600 grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all duration-300">
+            <div key={i} className="flex items-center gap-3 md:gap-4 text-slate-500 grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all duration-300">
               {logo.icon}
               <span className="text-base md:text-xl font-black uppercase tracking-tighter whitespace-nowrap">
                 {logo.name}
               </span>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const WhoThisIsFor = () => {
+  const [activeToggles, setActiveToggles] = useState<string[]>(['Commercial Services', 'Facility Maintenance']);
+  const services = [
+    "Commercial Services",
+    "Facility Maintenance",
+    "HVAC",
+    "Commercial Cleaning",
+    "Pest Control",
+    "Pressure Washing"
+  ];
+
+  const toggleService = (service: string) => {
+    setActiveToggles(prev => 
+      prev.includes(service) 
+        ? prev.filter(s => s !== service)
+        : [...prev, service]
+    );
+  };
+
+  return (
+    <section className="py-16 md:py-24 px-6 bg-gradient-to-b from-[#06101d] via-[#082f49] to-[#06101d] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto relative z-10">
+        <Reveal className="mb-10 max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-teal-400"></div>
+            Who this is for
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
+            Built for service companies that sell into commercial facilities and properties
+          </h2>
+          <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8">
+            If your company works with property managers, facility directors, retail chains, offices, or industrial locations, this page is written to match the way your business actually grows.
+          </p>
+          
+          <div className="flex flex-wrap gap-3">
+            {services.map((service) => {
+              const isActive = activeToggles.includes(service);
+              return (
+                <button
+                  key={service}
+                  onClick={() => toggleService(service)}
+                  className={`px-5 py-3 rounded-2xl text-sm font-bold transition-all duration-200 border ${
+                    isActive 
+                      ? 'bg-[#132b32] border-teal-500/50 text-white shadow-[0_0_15px_rgba(45,212,191,0.15)]' 
+                      : 'bg-[#0b1120]/60 border-slate-800/60 text-slate-400 hover:border-slate-700 hover:text-slate-300'
+                  }`}
+                >
+                  {service}
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
+          {[
+            {
+              title: "Commercial Services & Maintenance",
+              desc: "Operators that already understand the value of recurring site work, compliance-driven work, and account retention."
+            },
+            {
+              title: "Commercial Cleaning",
+              desc: "Commercial-focused cleaning companies that want a steadier pipeline of commercial work and better account retention."
+            },
+            {
+              title: "Pressure Washing, Plumbing, Maintenance",
+              desc: "Businesses where recurring sites, route density, and repeat commercial work matter more than random one-off jobs."
+            },
+            {
+              title: "HVAC, Pest Control & Specialty Services",
+              desc: "Operators serving commercial facilities and properties that need stronger positioning and a more predictable flow of opportunities."
+            }
+          ].map((item, i) => (
+            <Reveal key={i} delay={i * 0.1} className="bg-[#0b1120]/80 border border-slate-800/60 rounded-3xl p-6 md:p-8 hover:border-teal-500/30 transition-colors">
+              <div className="text-teal-400 text-[10px] font-bold tracking-widest uppercase mb-4">
+                Service Type
+              </div>
+              <h3 className="text-lg font-bold text-white mb-4 leading-snug">{item.title}</h3>
+              <p className="text-sm text-slate-300 leading-relaxed">{item.desc}</p>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.4} className="bg-[#0b1120]/80 border border-slate-800/60 rounded-3xl p-6 md:p-8 hover:border-teal-500/30 transition-colors">
+          <h3 className="text-lg font-bold text-white mb-2">For operators that already understand recurring site value</h3>
+          <p className="text-sm text-slate-300 leading-relaxed">
+            This category tends to respond well because recurring work, compliance pressure, and contract value are already part of how the business thinks.
+          </p>
+        </Reveal>
+      </div>
+      
+      {/* Background glow */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-teal-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+    </section>
+  );
+};
+
+const InteractiveEstimator = () => {
+  const [accounts, setAccounts] = useState(3);
+  const [value, setValue] = useState(850);
+  const [retention, setRetention] = useState(8);
+
+  const totalValue = accounts * value * retention;
+
+  const getBackgroundStyle = (val: number, min: number, max: number) => {
+    const percentage = ((val - min) / (max - min)) * 100;
+    return {
+      background: `linear-gradient(to right, #2dd4bf 0%, #2dd4bf ${percentage}%, #334155 ${percentage}%, #334155 100%)`
+    };
+  };
+
+  return (
+    <section className="py-16 md:py-24 px-6 bg-[#06101d] relative overflow-hidden">
+      <div className="max-w-5xl mx-auto relative z-10">
+        <Reveal className="mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-teal-400"></div>
+            Interactive Estimator
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
+            What a few more recurring<br />accounts could be worth
+          </h2>
+          <p className="text-base md:text-lg text-slate-300 leading-relaxed max-w-3xl">
+            This is not a guarantee. It is a simple way to show the economic logic behind tightening the offer around recurring commercial accounts instead of random one-off jobs.
+          </p>
+        </Reveal>
+
+        <div className="grid lg:grid-cols-12 gap-6">
+          {/* Left Column - Controls */}
+          <Reveal delay={0.1} className="lg:col-span-7 bg-[#0b1120] border border-slate-800/60 rounded-3xl p-6 md:p-8">
+            <div className="space-y-8">
+              {/* Slider 1 */}
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <label className="text-white font-bold text-sm md:text-base">Extra recurring accounts per month</label>
+                  <span className="text-white font-bold text-lg">{accounts}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="1" 
+                  max="20" 
+                  value={accounts} 
+                  onChange={(e) => setAccounts(Number(e.target.value))}
+                  className="custom-slider"
+                  style={getBackgroundStyle(accounts, 1, 20)}
+                />
+              </div>
+
+              {/* Slider 2 */}
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <label className="text-white font-bold text-sm md:text-base">Average monthly account value</label>
+                  <span className="text-white font-bold text-lg">${value}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="100" 
+                  max="5000" 
+                  step="50"
+                  value={value} 
+                  onChange={(e) => setValue(Number(e.target.value))}
+                  className="custom-slider"
+                  style={getBackgroundStyle(value, 100, 5000)}
+                />
+              </div>
+
+              {/* Slider 3 */}
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <label className="text-white font-bold text-sm md:text-base">Average retention in months</label>
+                  <span className="text-white font-bold text-lg">{retention}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="1" 
+                  max="60" 
+                  value={retention} 
+                  onChange={(e) => setRetention(Number(e.target.value))}
+                  className="custom-slider"
+                  style={getBackgroundStyle(retention, 1, 60)}
+                />
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Right Column - Results */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            <Reveal delay={0.2} className="bg-[#132b32] border border-teal-900/50 rounded-3xl p-6 md:p-8 flex-1 flex flex-col justify-center">
+              <div className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+                ${totalValue.toLocaleString()}
+              </div>
+              <p className="text-teal-100/80 font-bold text-sm md:text-base leading-snug">
+                estimated added revenue potential from new recurring accounts
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.3} className="bg-[#0b1120] border border-slate-800/60 rounded-3xl p-6 md:p-8 flex-1">
+              <h3 className="text-white font-bold text-lg mb-3">Why this matters</h3>
+              <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+                A few retained facility accounts can change the economics of the business fast. That is why the offer is framed around recurring account value, not vanity lead volume.
+              </p>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>
@@ -903,7 +1173,7 @@ const TerritoryControl = () => {
                     transition={{ duration: 0.4 }}
                     className="absolute inset-0"
                   >
-                    <div className="flex items-start gap-4">
+                    <article className="flex items-start gap-4">
                       <div className="bg-amber-400/10 p-2 rounded-lg">
                         <Quote size={18} className="text-amber-400" />
                       </div>
@@ -914,10 +1184,10 @@ const TerritoryControl = () => {
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] font-bold text-white">{testimonials[testimonialIndex].author}</span>
                           <span className="w-1 h-1 rounded-full bg-slate-700"></span>
-                          <span className="text-[10px] text-slate-500 font-medium">{testimonials[testimonialIndex].role}</span>
+                          <span className="text-[10px] text-slate-400 font-medium">{testimonials[testimonialIndex].role}</span>
                         </div>
                       </div>
-                    </div>
+                    </article>
                   </motion.div>
                 </AnimatePresence>
                 
@@ -969,7 +1239,7 @@ const TerritoryControl = () => {
                       
                       <div className="bg-[#0f172a] rounded-xl p-4 border border-slate-700/50 shadow-lg">
                         <div className="text-amber-400 font-bold text-xs mb-1">Walkthrough Funnel</div>
-                        <div className="text-[10px] text-slate-400 leading-relaxed font-medium">Commercial kitchens only with minimum job qualifiers</div>
+                        <div className="text-[10px] text-slate-400 leading-relaxed font-medium">Commercial facilities only with minimum job qualifiers</div>
                       </div>
                     </div>
                   </div>
@@ -987,12 +1257,12 @@ const TerritoryControl = () => {
 
 const Problem = () => {
   return (
-    <section id="problem" className="py-10 md:py-12 px-6">
+    <section id="problem" className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#0a111a] to-[#06101d]">
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-8 md:mb-10 max-w-2xl">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">The Problem</div>
           <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Losing contract revenue in three places right now</h2>
-          <p className="text-sm text-slate-400 leading-relaxed">Most hood cleaning companies do solid work and still leave serious money on the table because they have no real system for demand generation, follow-up, and renewals.</p>
+          <p className="text-sm text-slate-400 leading-relaxed">Most commercial service companies do solid work and still leave serious money on the table because they have no real system for demand generation, follow-up, and renewals.</p>
         </Reveal>
 
         <div className="grid md:grid-cols-3 gap-4 md:gap-5">
@@ -1010,6 +1280,48 @@ const Problem = () => {
             </Reveal>
           ))}
         </div>
+
+        <div className="grid md:grid-cols-2 gap-5 md:gap-6 mt-10">
+          <Reveal delay={0.2} className="bg-[#0b1120]/80 border border-slate-800/60 rounded-3xl p-6 md:p-8">
+            <div className="text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-2">Current Reality</div>
+            <h3 className="text-xl font-bold text-white mb-6">Why growth feels random</h3>
+            <ul className="space-y-4">
+              {[
+                "New work comes in inconsistently from referrals, chance, and old relationships.",
+                "Quotes are slow, weak, or not structured to increase contract value.",
+                "Leads are not followed up aggressively enough, so good opportunities go cold.",
+                "Existing contacts, old customers, and dormant accounts are rarely reactivated properly."
+              ].map((text, i) => (
+                <li key={i} className="flex items-start gap-3 pb-4 border-b border-slate-800/50 last:border-0 last:pb-0">
+                  <div className="w-5 h-5 rounded bg-rose-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <Minus size={14} className="text-rose-400" />
+                  </div>
+                  <span className="text-sm text-slate-300 leading-relaxed">{text}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal delay={0.3} className="bg-[#0b1120]/80 border border-slate-800/60 rounded-3xl p-6 md:p-8">
+            <div className="text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-2">What This Costs</div>
+            <h3 className="text-xl font-bold text-white mb-6">Revenue leaks that compound</h3>
+            <ul className="space-y-4">
+              {[
+                "Too many one-off jobs instead of more stable recurring account revenue.",
+                "Too much time wasted chasing weak opportunities with low close probability.",
+                "Territories feel saturated because the offer is not differentiated enough.",
+                "The owner stays stuck in reactive selling instead of building a repeatable engine."
+              ].map((text, i) => (
+                <li key={i} className="flex items-start gap-3 pb-4 border-b border-slate-800/50 last:border-0 last:pb-0">
+                  <div className="w-5 h-5 rounded bg-rose-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <Minus size={14} className="text-rose-400" />
+                  </div>
+                  <span className="text-sm text-slate-300 leading-relaxed">{text}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
         <CallToAction text="Fix Revenue Leaks" className="mt-8" />
       </div>
     </section>
@@ -1018,7 +1330,7 @@ const Problem = () => {
 
 const Solution = () => {
   return (
-    <section id="solution" className="py-10 md:py-12 px-6 bg-slate-900/30">
+    <section id="solution" className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30">
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-8 md:mb-10 max-w-2xl">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">The Solution</div>
@@ -1055,6 +1367,48 @@ const Solution = () => {
             </div>
           </Reveal>
         </div>
+
+        <div className="grid md:grid-cols-2 gap-5 md:gap-6 mt-10">
+          <Reveal delay={0.2} className="bg-[#0b1120]/80 border border-slate-800/60 rounded-3xl p-6 md:p-8">
+            <div className="text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-2">New Positioning</div>
+            <h3 className="text-xl font-bold text-white mb-6">What changes with a tighter offer</h3>
+            <ul className="space-y-4">
+              {[
+                "The messaging speaks directly to commercial service companies and recurring commercial growth.",
+                "The offer feels more premium because it combines opportunity flow with follow-up and conversion logic.",
+                "The territory angle adds scarcity, urgency, and a reason to act sooner.",
+                "The buyer can clearly see the outcome, the process, and the next step."
+              ].map((text, i) => (
+                <li key={i} className="flex items-start gap-3 pb-4 border-b border-slate-800/50 last:border-0 last:pb-0">
+                  <div className="w-5 h-5 rounded bg-teal-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <Plus size={14} className="text-teal-400" />
+                  </div>
+                  <span className="text-sm text-slate-300 leading-relaxed">{text}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal delay={0.3} className="bg-[#0b1120]/80 border border-slate-800/60 rounded-3xl p-6 md:p-8">
+            <div className="text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-2">Operational Gain</div>
+            <h3 className="text-xl font-bold text-white mb-6">What the system is really trying to create</h3>
+            <ul className="space-y-4">
+              {[
+                "More qualified opportunities tied to facility and property managers.",
+                "Faster quote response and better follow-up discipline.",
+                "A stronger path from ad click or inquiry to quote to recurring account.",
+                "Better use of the backend through renewals, win-back, and reactivation."
+              ].map((text, i) => (
+                <li key={i} className="flex items-start gap-3 pb-4 border-b border-slate-800/50 last:border-0 last:pb-0">
+                  <div className="w-5 h-5 rounded bg-teal-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <Plus size={14} className="text-teal-400" />
+                  </div>
+                  <span className="text-sm text-slate-300 leading-relaxed">{text}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
         <CallToAction text="See How It Works" className="mt-8" />
       </div>
     </section>
@@ -1066,27 +1420,27 @@ const CaseStudies = () => {
 
   const cases = [
     {
-      company: "Midwest Hood Cleaners",
+      company: "Midwest Commercial Services",
       metric: "400%",
       metricLabel: "Walkthrough Increase",
       results: ["Scaled from 2 to 8 recurring contracts/mo", "Reduced quote follow-up time to 5 mins", "Dominated 2 local territories"],
       quote: "We stopped competing on price because we were the first ones to respond and show up.",
-      challenge: "They were relying entirely on word-of-mouth and cold calling. They had a great reputation but struggled to get in front of facility managers when they were actually looking for a new hood cleaner. Their quote follow-up was manual, often taking 24-48 hours.",
-      solution: "We installed our territory-based paid acquisition engine targeting high-intent commercial kitchen searches. We implemented a 5-minute automated follow-up sequence for all new walkthrough requests, ensuring they were the first to contact the prospect.",
+      challenge: "They were relying entirely on word-of-mouth and cold calling. They had a great reputation but struggled to get in front of facility managers when they were actually looking for a new service provider. Their quote follow-up was manual, often taking 24-48 hours.",
+      solution: "We installed our territory-based paid acquisition engine targeting high-intent commercial facility searches. We implemented a 5-minute automated follow-up sequence for all new walkthrough requests, ensuring they were the first to contact the prospect.",
       timeline: "90 Days"
     },
     {
-      company: "Coastal Hood Pros",
+      company: "Coastal Facility Pros",
       metric: "12 New",
       metricLabel: "Contracts in 60 Days",
       results: ["Expanded to 3 new counties", "Average contract value increased by 25%", "Zero quote leakage with automated follow-up"],
       quote: "We used to chase leads. Now we just show up to the walkthroughs they book for us.",
-      challenge: "Coastal Hood Pros was a successful family-owned business that had hit a plateau. They were dominant in their home city but couldn't break into the neighboring counties effectively. Their sales process was inconsistent, and they often forgot to follow up on quotes for larger multi-site facilities.",
+      challenge: "Coastal Facility Pros was a successful family-owned business that had hit a plateau. They were dominant in their home city but couldn't break into the neighboring counties effectively. Their sales process was inconsistent, and they often forgot to follow up on quotes for larger multi-site facilities.",
       solution: "We implemented a multi-territory expansion plan. We built dedicated landing pages for each new county and launched targeted search campaigns. We also integrated their CRM with our automated quote-chase engine to ensure every multi-site proposal was followed up on at least 7 times over 14 days.",
       timeline: "60 Days"
     },
     {
-      company: "Apex Kitchen Exhaust",
+      company: "Apex Commercial Services",
       metric: "$14k",
       metricLabel: "Recovered Revenue",
       results: ["Reactivated 6 lapsed contracts in 45 days", "Automated 100% of renewal reminders", "Added $4k/mo in new contracts"],
@@ -1101,8 +1455,8 @@ const CaseStudies = () => {
       metricLabel: "New Recurring Revenue",
       results: ["Won 3 major hospital contracts", "98% renewal rate on existing accounts", "Reduced customer acquisition cost by 40%"],
       quote: "The system doesn't just get leads; it builds a defensible business asset.",
-      challenge: "Metro Clean was spending heavily on generic SEO and Google Ads with very little to show for it. They were getting 'leads' for residential kitchen cleanings or one-off residential vent hood repairs, which they didn't even do. They needed high-value commercial contracts.",
-      solution: "We rebuilt their entire digital presence to focus exclusively on commercial kitchen exhaust cleaning. We installed the 'Engine 1' pipeline with strict qualification filters. We also launched 'Engine 2' to protect their existing high-value hospital and school district contracts, ensuring they never missed a renewal window.",
+      challenge: "Metro Clean was spending heavily on generic SEO and Google Ads with very little to show for it. They were getting 'leads' for residential cleanings or one-off residential repairs, which they didn't even do. They needed high-value commercial contracts.",
+      solution: "We rebuilt their entire digital presence to focus exclusively on commercial facility maintenance. We installed the 'Engine 1' pipeline with strict qualification filters. We also launched 'Engine 2' to protect their existing high-value hospital and school district contracts, ensuring they never missed a renewal window.",
       timeline: "120 Days"
     }
   ];
@@ -1120,7 +1474,7 @@ const CaseStudies = () => {
   }, [selectedCase]);
 
   return (
-    <section id="case-studies" className="py-10 md:py-12 px-6">
+    <section id="case-studies" className="py-10 md:py-12 px-6 bg-gradient-to-b from-slate-900/30 to-[#06101d]">
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-8 md:mb-10 text-center">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Case Studies</div>
@@ -1129,7 +1483,7 @@ const CaseStudies = () => {
 
         <div className="grid md:grid-cols-2 gap-4 md:gap-5">
           {cases.map((cs, i) => (
-            <Reveal key={i} delay={i * 0.2} className="glass-panel p-6 md:p-8 rounded-3xl border-slate-700/50 relative overflow-hidden group cursor-pointer hover:border-amber-500/50 transition-all duration-300" onClick={() => setSelectedCase(i)}>
+            <Reveal as="article" key={i} delay={i * 0.2} className="glass-panel p-6 md:p-8 rounded-3xl border-slate-700/50 relative overflow-hidden group cursor-pointer hover:border-amber-500/50 transition-all duration-300" onClick={() => setSelectedCase(i)}>
               <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-colors"></div>
               <h3 className="text-lg font-bold mb-2 group-hover:text-amber-400 transition-colors">{cs.company}</h3>
               <div className="flex items-end gap-2 mb-4">
@@ -1145,7 +1499,7 @@ const CaseStudies = () => {
                 ))}
               </div>
               <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 relative mb-5">
-                <Quote size={16} className="absolute top-2 right-2 text-slate-700" />
+                <Quote size={16} className="absolute top-2 right-2 text-slate-600" />
                 <p className="text-xs text-slate-300 italic relative z-10 leading-relaxed">"{cs.quote}"</p>
               </div>
               <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs group-hover:translate-x-1.5 transition-transform">
@@ -1172,9 +1526,13 @@ const CaseStudies = () => {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="case-study-title"
               className="bg-slate-900 border border-slate-800 rounded-3xl p-5 md:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative"
             >
               <button 
+                aria-label="Close case study"
                 onClick={() => setSelectedCase(null)} 
                 className="absolute top-3 right-3 p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-full transition-colors"
               >
@@ -1183,7 +1541,7 @@ const CaseStudies = () => {
 
               <div className="mb-5">
                 <div className="text-amber-400 text-[10px] font-bold tracking-widest uppercase mb-1.5">Case Study</div>
-                <h3 className="text-xl md:text-2xl font-black mb-2">{cases[selectedCase].company}</h3>
+                <h3 id="case-study-title" className="text-xl md:text-2xl font-black mb-2">{cases[selectedCase].company}</h3>
                 <div className="flex flex-wrap items-center gap-2 text-[10px] font-medium">
                   <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
                     Timeline: {cases[selectedCase].timeline}
@@ -1242,16 +1600,16 @@ const CaseStudies = () => {
 const Reviews = () => {
   const reviews = [
     {
-      text: "Before implementing this system, our growth was stagnant, relying almost entirely on unpredictable word-of-mouth referrals. Now, we have a consistent, high-quality pipeline of commercial kitchen managers actively requesting walkthroughs. It hasn't just added revenue; it's completely transformed our business model and growth trajectory.",
+      text: "Before implementing this system, our growth was stagnant, relying almost entirely on unpredictable word-of-mouth referrals. Now, we have a consistent, high-quality pipeline of commercial facility managers actively requesting walkthroughs. It hasn't just added revenue; it's completely transformed our business model and growth trajectory.",
       author: "James T.",
-      role: "Founder & Managing Director, Elite Exhaust Systems",
+      role: "Founder & Managing Director, Elite Facility Systems",
       image: "https://picsum.photos/seed/operator1/100/100",
       rating: 5
     },
     {
       text: "The exclusive territory protection was the deciding factor for me. In a crowded market, having a proprietary engine that captures demand before my competitors even see it is a massive advantage. We've already secured four major commercial contracts in just our second month of operation.",
       author: "Mark S.",
-      role: "Principal Operator, Coastal Hood Professionals",
+      role: "Principal Operator, Coastal Facility Professionals",
       image: "https://picsum.photos/seed/operator2/100/100",
       rating: 5
     },
@@ -1263,7 +1621,7 @@ const Reviews = () => {
       rating: 4
     },
     {
-      text: "I've seen plenty of marketing promises, but these guys actually understand the hood cleaning industry from the inside out. They speak the technical language of facility managers and fire marshals, which is reflected in the high conversion rate of the leads they generate for us.",
+      text: "I've seen plenty of marketing promises, but these guys actually understand the commercial service industry from the inside out. They speak the technical language of facility managers, which is reflected in the high conversion rate of the leads they generate for us.",
       author: "Robert L.",
       role: "Director of Field Operations & Compliance",
       image: "https://picsum.photos/seed/operator4/100/100",
@@ -1272,7 +1630,7 @@ const Reviews = () => {
     {
       text: "The automated missed-call text back and the persistent quote-chase sequences are absolute game-changers for our front office. We are winning contracts that used to slip through the cracks simply because we are now the first to respond, every single time.",
       author: "David R.",
-      role: "Executive Founder, ProHood Regional Services",
+      role: "Executive Founder, ProService Regional Services",
       image: "https://picsum.photos/seed/operator5/100/100",
       rating: 5
     },
@@ -1319,7 +1677,7 @@ const Reviews = () => {
   };
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-slate-900/30 overflow-hidden">
+    <section className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 md:mb-12">
           <Reveal>
@@ -1369,7 +1727,7 @@ const Reviews = () => {
               }}
               className="absolute w-full max-w-4xl"
             >
-              <div className="glass-panel p-8 md:p-12 rounded-[2.5rem] border-slate-800 shadow-2xl relative group">
+              <article className="glass-panel p-8 md:p-12 rounded-[2.5rem] border-slate-800 shadow-2xl relative group transition-all duration-300 hover:scale-[1.02] hover:border-amber-500/50">
                 <div className="absolute top-8 right-8 text-slate-800/20 group-hover:text-amber-400/10 transition-colors duration-700">
                   <Quote size={80} strokeWidth={3} />
                 </div>
@@ -1384,7 +1742,7 @@ const Reviews = () => {
                           className={`transition-all duration-300 ${
                             star <= reviews[currentIndex].rating 
                               ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(245,197,94,0.4)]' 
-                              : 'text-slate-700'
+                              : 'text-slate-600'
                           }`} 
                         />
                       ))}
@@ -1417,7 +1775,7 @@ const Reviews = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </article>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -1482,7 +1840,7 @@ const First30Days = () => {
                   <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-5">
                     <div className="inline-block bg-slate-800 text-amber-400 text-[8px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-full mb-2">Install 01</div>
                     <h4 className="text-base font-bold text-white mb-1.5">Walkthrough Funnel</h4>
-                    <p className="text-slate-400 text-[9px] leading-relaxed">Commercial kitchen traffic is filtered through a dedicated page and moves into a controlled booking flow.</p>
+                    <p className="text-slate-400 text-[9px] leading-relaxed">Commercial facility traffic is filtered through a dedicated page and moves into a controlled booking flow.</p>
                   </div>
                   <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-5">
                     <div className="inline-block bg-slate-800 text-amber-400 text-[8px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-full mb-2">Install 02</div>
@@ -1561,7 +1919,7 @@ const ROI = () => {
               </div>
               <div className="flex items-center">
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  One solid recurring commercial kitchen account can justify a meaningful part of the retainer. When the renewal engine also helps prevent silent churn, the economics get stronger again.
+                  One solid recurring commercial facility account can justify a meaningful part of the retainer. When the renewal engine also helps prevent silent churn, the economics get stronger again.
                 </p>
               </div>
             </div>
@@ -1614,7 +1972,7 @@ const FitCheck = () => {
               <h3 className="text-xl font-bold text-white mb-6">This is for you if</h3>
               <ul className="space-y-3">
                 {[
-                  "You serve commercial kitchens only",
+                  "You serve commercial facilities only",
                   "You want recurring contracts, not random one-offs",
                   "You have capacity for more work",
                   "You can respond to leads quickly",
@@ -1663,9 +2021,22 @@ const Guarantee = () => {
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-12">
             <div>
               <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-3">The Guarantee</div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight tracking-tight">12 qualified<br/>walkthrough<br/>requests in<br/>30 days or we<br/>keep working<br/>until you do</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight tracking-tight">
+                <motion.span 
+                  animate={{ 
+                    color: ['#ffffff', '#2dd4bf', '#ffffff'],
+                    textShadow: ['0px 0px 0px rgba(45,212,191,0)', '0px 0px 20px rgba(45,212,191,0.5)', '0px 0px 0px rgba(45,212,191,0)']
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="inline-block"
+                >
+                  12 qualified<br/>walkthrough<br/>requests in<br/>30 days
+                </motion.span>
+                <br/>
+                <span className="text-slate-400 text-2xl md:text-3xl mt-2 inline-block">or we keep working<br/>until you do</span>
+              </h2>
               <p className="text-slate-400 leading-relaxed text-sm">
-                A qualified walkthrough request means a commercial kitchen inside your approved service area where the decision-maker or authorized contact requests a walkthrough, matches your current service offer, and meets the minimum job criteria we define together before launch.
+                A qualified walkthrough request means a commercial facility inside your approved service area where the decision-maker or authorized contact requests a walkthrough, matches your current service offer, and meets the minimum job criteria we define together before launch.
               </p>
             </div>
             <div className="space-y-8">
@@ -1674,8 +2045,8 @@ const Guarantee = () => {
                 <ul className="space-y-2.5">
                   {[
                     'Inside the approved service area', 
-                    'Commercial kitchen buyer, manager, owner, or authorized contact', 
-                    'Matches your current hood cleaning service offer', 
+                    'Commercial facility buyer, manager, owner, or authorized contact', 
+                    'Matches your current commercial service offer', 
                     'Meets the minimum job criteria agreed before launch',
                     'Needs service inside the agreed buying window',
                     'Valid contact details and a reachable follow-up path'
@@ -1716,20 +2087,20 @@ const Guarantee = () => {
 
 const Pricing = () => {
   return (
-    <section id="pricing" className="py-10 md:py-12 px-6">
+    <section id="pricing" className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#0a111a] to-[#06101d]">
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-8 md:mb-10 text-center max-w-2xl mx-auto">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Investment</div>
           <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">Three plans. One territory at a time.</h2>
-          <p className="text-sm text-slate-400 leading-relaxed">We only work with one hood cleaning company per territory, so plan selection depends on how much market coverage and system depth you actually need.</p>
+          <p className="text-sm text-slate-400 leading-relaxed">We only work with one commercial service company per territory, so plan selection depends on how much market coverage and system depth you actually need.</p>
         </Reveal>
 
         <div className="grid lg:grid-cols-3 gap-5 items-center">
-          <Reveal delay={0.1} className="glass-panel p-8 md:p-10 rounded-3xl border-slate-800">
+          <Reveal as="article" delay={0.1} className="glass-panel p-8 md:p-10 rounded-3xl border-slate-800">
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Plan A</div>
             <h3 className="text-xl font-bold mb-3">Single Territory</h3>
             <div className="mb-3">
-              <span className="text-3xl md:text-4xl font-black">$2,400</span>
+              <span className="text-3xl md:text-4xl font-black">$1,200</span>
               <span className="text-slate-400 text-xs font-bold"> / mo + ad spend</span>
             </div>
             <p className="text-xs text-slate-400 mb-6 h-12 leading-relaxed">For operators focused on one market who want the full contract engine installed fast.</p>
@@ -1740,17 +2111,17 @@ const Pricing = () => {
                 </li>
               ))}
             </ul>
-            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="block w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-center rounded-xl font-bold transition-colors text-sm">Launch Territory</a>
+            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="block w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-center rounded-xl font-bold transition-all hover:scale-105 hover:shadow-lg active:scale-95 text-sm">Launch Territory</a>
           </Reveal>
 
-          <Reveal delay={0.2} className="glass-panel p-8 md:p-10 rounded-3xl border-amber-500/30 bg-slate-800/40 relative transform lg:-translate-y-2 shadow-2xl shadow-amber-500/10">
+          <Reveal as="article" delay={0.2} className="glass-panel p-8 md:p-10 rounded-3xl border-amber-500/30 bg-slate-800/40 relative transform lg:-translate-y-2 shadow-2xl shadow-amber-500/10">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 text-[10px] font-black uppercase tracking-wider py-1 px-3 rounded-full">
               Most Popular
             </div>
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Plan B</div>
             <h3 className="text-xl font-bold mb-3">Territory Expansion</h3>
             <div className="mb-3">
-              <span className="text-3xl md:text-4xl font-black">$3,400</span>
+              <span className="text-3xl md:text-4xl font-black">$3,200</span>
               <span className="text-slate-400 text-xs font-bold"> / mo + ad spend</span>
             </div>
             <p className="text-xs text-slate-400 mb-6 h-12 leading-relaxed">For operators covering multiple cities or wanting more volume and the strongest path into month 3 SEO.</p>
@@ -1761,14 +2132,14 @@ const Pricing = () => {
                 </li>
               ))}
             </ul>
-            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="block w-full py-3 px-4 bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 text-center rounded-xl font-bold hover:scale-105 transition-transform text-sm">Scale Territory</a>
+            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="block w-full py-3 px-4 bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 text-center rounded-xl font-bold hover:scale-105 hover:shadow-lg active:scale-95 transition-all text-sm">Scale Territory</a>
           </Reveal>
 
-          <Reveal delay={0.3} className="glass-panel p-8 md:p-10 rounded-3xl border-slate-800">
+          <Reveal as="article" delay={0.3} className="glass-panel p-8 md:p-10 rounded-3xl border-slate-800">
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Plan C</div>
             <h3 className="text-xl font-bold mb-3">Market Dominance</h3>
             <div className="mb-3">
-              <span className="text-3xl md:text-4xl font-black">$5,400</span>
+              <span className="text-3xl md:text-4xl font-black">$5,200</span>
               <span className="text-slate-400 text-xs font-bold"> / mo + ad spend</span>
             </div>
             <p className="text-xs text-slate-400 mb-6 h-12 leading-relaxed">For operators who want paid demand now and SEO compounding from day one across a larger market footprint.</p>
@@ -1779,7 +2150,7 @@ const Pricing = () => {
                 </li>
               ))}
             </ul>
-            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="block w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-center rounded-xl font-bold transition-colors text-sm">Dominate Market</a>
+            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="block w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-center rounded-xl font-bold transition-all hover:scale-105 hover:shadow-lg active:scale-95 text-sm">Dominate Market</a>
           </Reveal>
         </div>
         <CallToAction text="View Pricing Details" className="mt-8" />
@@ -1790,16 +2161,17 @@ const Pricing = () => {
 
 const FAQ = () => {
   const faqs = [
-    { q: "What counts as a qualified walkthrough request?", a: "A commercial kitchen inside your approved service area where the decision-maker or authorized contact requests a walkthrough, matches your service offer, and meets the minimum job criteria set before launch." },
+    { q: "What types of companies is this built for?", a: "It is built for service companies that sell into commercial facilities, properties, and industrial locations including commercial cleaning, pressure washing, pest control, plumbing, HVAC, maintenance, and related services." },
+    { q: "What counts as a qualified walkthrough request?", a: "A commercial facility inside your approved service area where the decision-maker or authorized contact requests a walkthrough, matches your service offer, and meets the minimum job criteria set before launch." },
     { q: "How quickly can this go live?", a: "The paid contract engine is designed to launch inside 14 days once access, approvals, and core assets are in place." },
     { q: "Is ad spend included?", a: "No. Management is separate from ad spend so budget stays transparent and under your control." },
     { q: "Why add SEO later instead of immediately?", a: "Because paid demand gives us real conversion data first. That means SEO gets built around proven winners instead of assumptions." },
-    { q: "Do you work with more than one hood cleaning company in the same market?", a: "No. We partner with one operator per territory, which protects positioning and makes the relationship more defensible." },
+    { q: "Do you work with more than one commercial service company in the same market?", a: "No. We partner with one operator per territory, which protects positioning and makes the relationship more defensible." },
     { q: "What happens if we stop working together?", a: "Your accounts, data, pages, and assets stay yours. Nothing is held hostage." }
   ];
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-slate-900/30">
+    <section className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30">
       <div className="max-w-3xl mx-auto">
         <Reveal className="mb-8 md:mb-10 text-center">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">FAQ</div>
@@ -1832,7 +2204,7 @@ const FAQ = () => {
 
 const CTA = () => {
   return (
-    <section id="cta" className="py-10 md:py-12 px-6">
+    <section id="cta" className="py-10 md:py-12 px-6 bg-gradient-to-b from-slate-900/30 to-slate-950">
       <div className="max-w-5xl mx-auto">
         <Reveal className="glass-panel p-10 md:p-16 rounded-3xl border-slate-700/50 bg-gradient-to-br from-slate-800/80 to-slate-900 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/20 rounded-full blur-[80px]"></div>
@@ -1845,7 +2217,7 @@ const CTA = () => {
               We will map out what the first 30 days would look like in your market, review your service area, and show you the fastest path to more recurring contract opportunities without relying on referrals alone.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noreferrer" className="bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-6 py-3 rounded-xl font-bold text-base hover:scale-105 transition-transform shadow-[0_0_30px_rgba(245,197,94,0.25)] flex items-center gap-2.5">
+              <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noreferrer" className="bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-6 py-3 rounded-xl font-bold text-base hover:scale-105 hover:shadow-lg active:scale-95 transition-all shadow-[0_0_30px_rgba(245,197,94,0.25)] flex items-center gap-2.5">
                 Check Territory Availability <ArrowUpRight size={18} />
               </a>
             </div>
@@ -1973,14 +2345,19 @@ const LegalModal = ({ isOpen, onClose, type }: { isOpen: boolean, onClose: () =>
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="legal-modal-title"
         className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-10 shadow-2xl custom-scrollbar"
       >
         <button 
+          aria-label="Close modal"
           onClick={onClose}
           className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors"
         >
           <X size={24} />
         </button>
+        <div id="legal-modal-title" className="sr-only">{type === 'terms' ? 'Terms and Conditions' : 'Fulfillment Policy'}</div>
         {content}
       </motion.div>
     </div>
@@ -1998,12 +2375,12 @@ const Footer = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-200 flex items-center justify-center text-slate-950 font-black text-sm">HC</div>
             Contract Engine
           </div>
-          <p className="text-xs text-slate-500 max-w-md leading-relaxed">
-            Built for recurring commercial kitchen contracts, territory-based growth, and stronger renewal retention. Your accounts, data, pages, and assets stay yours.
+          <p className="text-xs text-slate-400 max-w-md leading-relaxed">
+            Built for recurring commercial facility contracts, territory-based growth, and stronger renewal retention. Your accounts, data, pages, and assets stay yours.
           </p>
         </div>
-        <div className="md:text-right text-xs text-slate-500 space-y-2">
-          <div>Commercial hood cleaning operators only</div>
+        <div className="md:text-right text-xs text-slate-400 space-y-2">
+          <div>Commercial service companies only</div>
           <div>One operator per approved territory</div>
           <div className="flex flex-wrap md:justify-end gap-4 mt-4">
             <button onClick={() => setLegalType('fulfillment')} className="hover:text-amber-400 transition-colors">Fulfillment Policy</button>
@@ -2025,81 +2402,100 @@ const Footer = () => {
   );
 };
 
-const SixComponents = () => {
+const SystemComponents = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const components = [
     { 
       num: "01", 
-      title: "Contract Offer + Package Ladder", 
-      desc: "Single-site, multi-site, and recurring contract packaging so you stop quoting from scratch every time.",
-      icon: <Package size={18} className="text-amber-400" />
+      title: "Market-Specific Positioning Rewrite", 
+      desc: "Sharpen your offer to speak directly to commercial facilities and property managers, eliminating generic messaging.",
+      icon: <Target size={20} className="text-teal-400" />,
+      tag: "CORE SYSTEM"
     },
     { 
       num: "02", 
-      title: "Walkthrough Booking Funnel", 
-      desc: "A funnel built to attract commercial kitchens and filter weak leads out before they waste your team's time.",
-      icon: <Filter size={18} className="text-amber-400" />
+      title: "Front-End Opportunity Engine", 
+      desc: "Targeted campaigns and lead-flow architecture designed to generate high-intent commercial opportunities, not random volume.",
+      icon: <Zap size={20} className="text-teal-400" />
     },
     { 
       num: "03", 
-      title: "Paid Acquisition Engine", 
-      desc: "Campaigns designed to drive serious walkthrough requests from commercial kitchen buyers in your territory.",
-      icon: <Zap size={18} className="text-amber-400" />
+      title: "Back-End Follow-Up Design", 
+      desc: "Automated fast-response follow-up and routing logic to turn more leads into real conversations.",
+      icon: <MessageCircle size={20} className="text-teal-400" />
     },
     { 
       num: "04", 
-      title: "Instant Follow-Up Automation", 
-      desc: "SMS, reminders, missed-call text back, and quote-chase flows so leads do not go cold.",
-      icon: <MessageSquare size={18} className="text-amber-400" />
+      title: "Quote Conversion Framing", 
+      desc: "Strategic pricing tiers and clear quote presentation to prevent opportunities from dying after the first call.",
+      icon: <FileText size={20} className="text-teal-400" />
     },
     { 
       num: "05", 
-      title: "Renewal Calendar Engine", 
-      desc: "Due-date reminders, overdue chase, and reactivation sequences to protect recurring account value.",
-      icon: <Calendar size={18} className="text-amber-400" />
+      title: "Reactivation & Win-Back Layer", 
+      desc: "Turn dormant accounts and old inquiries into active revenue opportunities with automated win-back sequences.",
+      icon: <RefreshCw size={20} className="text-teal-400" />
     },
     { 
       num: "06", 
-      title: "Weekly Scoreboard", 
-      desc: "Simple weekly numbers focused on walkthroughs, quotes sent, contracts won, renewals saved, and cost per walkthrough.",
-      icon: <BarChart3 size={18} className="text-amber-400" />
+      title: "Territory Review & Exclusivity", 
+      desc: "Exclusive market reservation for one operator per territory, increasing urgency and strategic value.",
+      icon: <MapPin size={20} className="text-teal-400" />
+    },
+    { 
+      num: "07", 
+      title: "Service-Market Fit Check", 
+      desc: "Direct assessment of your market and offer viability to prevent wasted time and resources.",
+      icon: <CheckCircle2 size={20} className="text-teal-400" />,
+      tag: "BONUS"
+    },
+    { 
+      num: "08", 
+      title: "Commercial Sub-Niche Expansion", 
+      desc: "Expand your addressable market with targeted message variants for adjacent service categories.",
+      icon: <Maximize2 size={20} className="text-teal-400" />,
+      tag: "BONUS"
+    },
+    { 
+      num: "09", 
+      title: "Offer Clarity Review", 
+      desc: "Streamlined copy and positioning that removes vague promises, making your service easier to buy.",
+      icon: <Search size={20} className="text-teal-400" />,
+      tag: "BONUS"
     }
   ];
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-[#0a111a]">
+    <section className="py-16 md:py-24 px-6 bg-gradient-to-b from-[#06101d] to-[#0a111a]">
       <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-10 mb-8 md:mb-10 items-end">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-10 mb-12 md:mb-16 items-end">
           <Reveal>
-            <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">What You Get</div>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Six components,<br/>done for you</h2>
+            <div className="text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-2">What You Get</div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">Nine components,<br/>done for you</h2>
           </Reveal>
           <Reveal delay={0.2}>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <p className="text-base md:text-lg text-slate-400 leading-relaxed">
               This is built as a system, not a random collection of marketing tasks. Every component exists to help you win more commercial accounts and protect recurring revenue.
             </p>
           </Reveal>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-12">
           {components.map((comp, i) => (
             <Reveal key={i} delay={i * 0.1}>
               <motion.div 
                 whileHover={{ y: -5 }}
-                className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 md:p-7 h-full hover:bg-slate-800/50 transition-colors relative group cursor-help"
-                onMouseEnter={() => setHoveredIndex(i)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                className="bg-[#0b1120]/80 border border-slate-800/60 rounded-3xl p-6 md:p-8 h-full hover:border-teal-500/30 transition-colors relative flex flex-col"
               >
-                <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: (i * 0.1) + 0.2, duration: 0.5 }}
-                  className="bg-amber-400 text-slate-950 font-bold w-8 h-8 rounded-lg flex items-center justify-center mb-4 text-sm"
-                >
-                  {comp.num}
-                </motion.div>
-                <div className="flex items-center gap-3 mb-2">
+                {comp.tag && (
+                  <div className="mb-4">
+                    <span className="inline-block px-3 py-1 rounded-full bg-slate-800/80 text-teal-400 text-[10px] font-bold tracking-widest uppercase border border-slate-700/50">
+                      {comp.tag}
+                    </span>
+                  </div>
+                )}
+                
+                <div className={`mb-4 ${!comp.tag ? 'mt-2' : ''}`}>
                   <motion.div
                     initial={{ rotate: -10, opacity: 0 }}
                     whileInView={{ rotate: 0, opacity: 1 }}
@@ -2108,25 +2504,15 @@ const SixComponents = () => {
                   >
                     {comp.icon}
                   </motion.div>
-                  <h3 className="text-lg font-bold">{comp.title}</h3>
                 </div>
-                <p className="text-slate-400 text-xs leading-relaxed">{comp.desc}</p>
                 
-                <AnimatePresence>
-                  {hoveredIndex === i && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-64 p-4 bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl z-50 pointer-events-none hidden md:block"
-                    >
-                      <div className="text-xs text-slate-200 leading-relaxed font-medium">
-                        {comp.desc}
-                      </div>
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-800"></div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <div className="text-teal-400 font-bold text-sm mb-3">
+                  {comp.num}
+                </div>
+                
+                <h3 className="text-lg font-bold text-white mb-3 leading-snug">{comp.title}</h3>
+                
+                <p className="text-slate-400 text-sm leading-relaxed flex-grow">{comp.desc}</p>
               </motion.div>
             </Reveal>
           ))}
@@ -2142,33 +2528,40 @@ const OperationalProof = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleMove = (clientX: number) => {
+  const handleMove = useCallback((clientX: number) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = clientX - rect.left;
     const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
     setSliderPosition(percentage);
-  };
-
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    handleMove(e.clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    handleMove(e.touches[0].clientX);
-  };
+  }, []);
 
   useEffect(() => {
     const handleMouseUp = () => setIsDragging(false);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('touchend', handleMouseUp);
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) handleMove(e.clientX);
+    };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+        handleMove(e.touches[0].clientX);
+      }
+    };
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('touchend', handleMouseUp);
+    }
+
     return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('touchend', handleMouseUp);
     };
-  }, []);
+  }, [isDragging, handleMove]);
 
   return (
     <section className="py-10 md:py-12 px-6 bg-[#0a111a]">
@@ -2189,14 +2582,15 @@ const OperationalProof = () => {
           <div 
             ref={containerRef}
             className="relative w-full h-[400px] md:h-[380px] rounded-3xl overflow-hidden cursor-ew-resize select-none border border-slate-800 bg-slate-900/40 mb-8"
-            onMouseMove={onMouseMove}
-            onTouchMove={onTouchMove}
             onMouseDown={(e) => { setIsDragging(true); handleMove(e.clientX); }}
             onTouchStart={(e) => { setIsDragging(true); handleMove(e.touches[0].clientX); }}
           >
             {/* Right Side (Without System / Before) */}
             <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-center items-end">
               <div className="w-full md:w-1/2 space-y-3 md:pl-6">
+                <div className="inline-block bg-slate-800/80 text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-2 text-slate-400 border border-slate-700">
+                  Without The System
+                </div>
                 {[
                   "Booked walkthrough capture for commercial buyers only",
                   "Instant response, missed-call text back, and quote recovery",
@@ -2213,7 +2607,12 @@ const OperationalProof = () => {
             {/* Left Side (With System / After) */}
             <div 
               className="absolute inset-0 bg-[#13232c] p-6 md:p-8"
-              style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
+              style={{ 
+                clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`,
+                WebkitClipPath: `inset(0 ${100 - sliderPosition}% 0 0)`,
+                transform: 'translateZ(0)',
+                willChange: 'clip-path'
+              }}
             >
               <div className="inline-block bg-slate-800/80 text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-5 text-white border border-slate-700">
                 With The System
@@ -2268,7 +2667,7 @@ const SeoUpgrade = () => {
   ];
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-[#0a111a]">
+    <section className="py-10 md:py-12 px-6 bg-gradient-to-b from-slate-900/30 to-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <Reveal>
           <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 md:p-10 lg:p-12 mb-8">
@@ -2293,7 +2692,7 @@ const SeoUpgrade = () => {
               <div className="flex items-center">
                 <div className="bg-slate-950 border border-slate-800 rounded-3xl p-6 md:p-8 w-full shadow-2xl">
                   <div className="text-emerald-400 text-[11px] font-bold tracking-widest uppercase mb-2">Organic Demand Layer</div>
-                  <div className="text-2xl font-bold mb-4">+$1.5k to $2.5k<span className="text-sm text-slate-500 font-normal">/month</span></div>
+                  <div className="text-2xl font-bold mb-4">+$1.5k to $2.5k<span className="text-sm text-slate-400 font-normal">/month</span></div>
                   
                   <p className="text-slate-400 mb-6 leading-relaxed text-sm">
                     We build SEO around real winners instead of guessing. That means the pages, profile work, and content are built from data already proven by the paid engine.
@@ -2405,7 +2804,7 @@ const StickyCTA = () => {
                 href="https://calendly.com/adil_shahzad_khawaja/30min" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="flex-1 sm:flex-none bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-5 py-2.5 rounded-xl font-bold text-xs md:text-sm flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform"
+                className="flex-1 sm:flex-none bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-5 py-2.5 rounded-xl font-bold text-xs md:text-sm flex items-center justify-center gap-2 hover:scale-[1.02] hover:shadow-lg active:scale-95 transition-all"
               >
                 Book Strategy Call <ArrowRight size={16} />
               </a>
@@ -2427,29 +2826,33 @@ export default function App() {
         <Bubbles />
         <div className="relative z-10">
           <Navbar />
-          <Hero />
-          <TrustedBy />
-          <TerritoryControl />
-          <SystemInstalls />
-          <SixComponents />
-          <OperationalProof />
-          <First30Days />
-          <LaunchTimeline />
-          <Problem />
-          <Solution />
-          <CaseStudies />
-          <Reviews />
-          <FeatureWrapper flag="showSeoUpgrade">
-            <SeoUpgrade />
-          </FeatureWrapper>
-          <ROI />
-          <FitCheck />
-          <Guarantee />
-          <FeatureWrapper flag="showPricing">
-            <Pricing />
-          </FeatureWrapper>
-          <FAQ />
-          <CTA />
+          <main>
+            <Hero />
+            <TrustedBy />
+            <WhoThisIsFor />
+            <InteractiveEstimator />
+            <TerritoryControl />
+            <SystemInstalls />
+            <SystemComponents />
+            <OperationalProof />
+            <First30Days />
+            <LaunchTimeline />
+            <Problem />
+            <Solution />
+            <CaseStudies />
+            <Reviews />
+            <FeatureWrapper flag="showSeoUpgrade">
+              <SeoUpgrade />
+            </FeatureWrapper>
+            <ROI />
+            <FitCheck />
+            <Guarantee />
+            <FeatureWrapper flag="showPricing">
+              <Pricing />
+            </FeatureWrapper>
+            <FAQ />
+            <CTA />
+          </main>
           <Footer />
         </div>
         <StickyCTA />
