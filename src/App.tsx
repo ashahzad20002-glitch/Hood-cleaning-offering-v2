@@ -841,11 +841,7 @@ const Hero = () => {
             </a>
           </div>
           
-          <p className="text-xs text-slate-400 mb-10 max-w-lg leading-relaxed mx-auto">
-            We partner with exclusive commercial service providers per territory to ensure maximum market share and dedicated support. If your market is already taken, we will tell you before onboarding.
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mb-10">
             {[
               { val: "12-25", label: "Walkthroughs / mo" },
               { val: "14", label: "Day Launch" },
@@ -862,6 +858,10 @@ const Hero = () => {
               </motion.div>
             ))}
           </div>
+
+          <p className="text-xs text-slate-400 mb-16 max-w-lg leading-relaxed mx-auto">
+            We partner with exclusive commercial service providers per territory to ensure maximum market share and dedicated support. If your market is already taken, we will tell you before onboarding.
+          </p>
         </Reveal>
 
         <Reveal delay={0.2} className="relative w-full max-w-3xl mx-auto">
