@@ -119,7 +119,7 @@ const CallToAction = ({ text = "Book a Call", className = "" }: { text?: string,
 const SystemInstalls = () => {
   const { flags } = useFeatures();
   return (
-    <section className="py-10 md:py-12 px-6 relative">
+    <section className="py-8 md:py-10 px-6 relative">
       <div className="max-w-4xl mx-auto">
         <Reveal>
           <div className="bg-[#0f172a] border border-slate-800/60 rounded-3xl p-8 md:p-10 lg:p-12 shadow-2xl">
@@ -808,10 +808,10 @@ const Hero = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 text-amber-400 text-xs font-bold tracking-wide uppercase mb-4">
             <Target size={12} /> For commercial service operators
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-black leading-[1.1] tracking-tight mb-6 text-balance text-white">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 text-balance text-white">
             Turn your service area into a <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">predictable source</span> of recurring contracts.
           </h1>
-          <p className="text-lg md:text-2xl text-slate-300 mb-8 max-w-3xl leading-relaxed">
+          <p className="text-base md:text-xl text-slate-300 mb-8 max-w-3xl leading-relaxed">
             We help commercial service companies generate stronger B2B opportunities, follow up faster, and convert more quotes into recurring facility accounts.
           </p>
           
@@ -833,10 +833,10 @@ const Hero = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-10 w-full sm:w-auto">
-            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-8 py-4 rounded-xl font-bold hover:scale-105 hover:shadow-lg active:scale-95 transition-all shadow-[0_0_30px_rgba(245,197,94,0.25)] flex items-center justify-center gap-2 text-sm md:text-base">
+            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto bg-gradient-to-r from-amber-400 to-amber-200 text-slate-950 px-6 py-3 rounded-xl font-bold hover:scale-105 hover:shadow-lg active:scale-95 transition-all shadow-[0_0_30px_rgba(245,197,94,0.25)] flex items-center justify-center gap-2 text-sm">
               Check Territory Availability
             </a>
-            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:scale-105 hover:shadow-lg active:scale-95 transition-all text-white flex items-center justify-center gap-2 text-sm md:text-base">
+            <a href="https://calendly.com/adil_shahzad_khawaja/30min" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-6 py-3 rounded-xl font-bold bg-slate-800/50 border border-slate-700 hover:bg-slate-800 hover:scale-105 hover:shadow-lg active:scale-95 transition-all text-white flex items-center justify-center gap-2 text-sm">
               Book Strategy Call
             </a>
           </div>
@@ -932,17 +932,17 @@ const WhoThisIsFor = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 px-6 bg-gradient-to-b from-[#06101d] via-[#082f49] to-[#06101d] relative overflow-hidden">
+    <section className="py-12 md:py-16 px-6 bg-gradient-to-b from-[#06101d] via-[#082f49] to-[#06101d] relative overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         <Reveal className="mb-10 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-6">
             <div className="w-1.5 h-1.5 rounded-full bg-teal-400"></div>
             Who this is for
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
             Built for service companies that sell into commercial facilities and properties
           </h2>
-          <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8">
+          <p className="text-sm md:text-base text-slate-300 leading-relaxed mb-8">
             If your company works with property managers, facility directors, retail chains, offices, or industrial locations, this page is written to match the way your business actually grows.
           </p>
           
@@ -1024,17 +1024,17 @@ const InteractiveEstimator = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 px-6 bg-[#06101d] relative overflow-hidden">
+    <section className="py-12 md:py-16 px-6 bg-[#06101d] relative overflow-hidden">
       <div className="max-w-5xl mx-auto relative z-10">
         <Reveal className="mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-6">
             <div className="w-1.5 h-1.5 rounded-full bg-teal-400"></div>
             Interactive Estimator
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
             What a few more recurring<br />accounts could be worth
           </h2>
-          <p className="text-base md:text-lg text-slate-300 leading-relaxed max-w-3xl">
+          <p className="text-sm md:text-base text-slate-300 leading-relaxed max-w-3xl">
             This is not a guarantee. It is a simple way to show the economic logic behind tightening the offer around recurring commercial accounts instead of random one-off jobs.
           </p>
         </Reveal>
@@ -1100,7 +1100,7 @@ const InteractiveEstimator = () => {
           {/* Right Column - Results */}
           <div className="lg:col-span-5 flex flex-col gap-6">
             <Reveal delay={0.2} className="bg-[#132b32] border border-teal-900/50 rounded-3xl p-6 md:p-8 flex-1 flex flex-col justify-center">
-              <div className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+              <div className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
                 ${totalValue.toLocaleString()}
               </div>
               <p className="text-teal-100/80 font-bold text-sm md:text-base leading-snug">
@@ -1139,7 +1139,7 @@ const TerritoryControl = () => {
   }, []);
 
   return (
-    <section className="py-10 md:py-12 px-6 relative">
+    <section className="py-8 md:py-10 px-6 relative">
       <div className="max-w-7xl mx-auto">
         <Reveal>
           <div className="bg-[#0f172a] border border-slate-800/60 rounded-[2rem] p-8 md:p-10 lg:p-12 relative overflow-hidden flex flex-col lg:flex-row gap-10 items-center shadow-2xl">
@@ -1148,7 +1148,7 @@ const TerritoryControl = () => {
               <div className="text-amber-400 text-sm font-bold tracking-widest uppercase mb-3">
                 Territory Control
               </div>
-              <h2 className="text-3xl md:text-4xl font-black leading-[1.1] tracking-tight mb-4 text-white">
+              <h2 className="text-2xl md:text-3xl font-black leading-[1.1] tracking-tight mb-4 text-white">
                 Built to help one<br />operator own one<br />market properly
               </h2>
               <p className="text-base text-slate-400 mb-6 max-w-xl leading-relaxed">
@@ -1257,11 +1257,11 @@ const TerritoryControl = () => {
 
 const Problem = () => {
   return (
-    <section id="problem" className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#0a111a] to-[#06101d]">
+    <section id="problem" className="py-8 md:py-10 px-6 bg-gradient-to-b from-[#0a111a] to-[#06101d]">
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-8 md:mb-10 max-w-2xl">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">The Problem</div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Losing contract revenue in three places right now</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight text-white">Losing contract revenue in three places right now</h2>
           <p className="text-sm text-slate-400 leading-relaxed">Most commercial service companies do solid work and still leave serious money on the table because they have no real system for demand generation, follow-up, and renewals.</p>
         </Reveal>
 
@@ -1330,11 +1330,11 @@ const Problem = () => {
 
 const Solution = () => {
   return (
-    <section id="solution" className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30">
+    <section id="solution" className="py-8 md:py-10 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30">
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-8 md:mb-10 max-w-2xl">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">The Solution</div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Two engines. One contract growth system.</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight text-white">Two engines. One contract growth system.</h2>
           <p className="text-sm text-slate-400 leading-relaxed">We do not just run ads or tweak a website. We install a front-end acquisition engine and a back-end retention engine so you can win more recurring contracts and keep more of the revenue you already earned.</p>
         </Reveal>
 
@@ -1474,11 +1474,11 @@ const CaseStudies = () => {
   }, [selectedCase]);
 
   return (
-    <section id="case-studies" className="py-10 md:py-12 px-6 bg-gradient-to-b from-slate-900/30 to-[#06101d]">
+    <section id="case-studies" className="py-8 md:py-10 px-6 bg-gradient-to-b from-slate-900/30 to-[#06101d]">
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-8 md:mb-10 text-center">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Case Studies</div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white">Real results from real operators</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight text-white">Real results from real operators</h2>
         </Reveal>
 
         <div className="grid md:grid-cols-2 gap-4 md:gap-5">
@@ -1677,12 +1677,12 @@ const Reviews = () => {
   };
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30 overflow-hidden">
+    <section className="py-8 md:py-10 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 md:mb-12">
           <Reveal>
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Operator Feedback</div>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">What operators are saying</h2>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white">What operators are saying</h2>
           </Reveal>
           
           <div className="flex items-center gap-3">
@@ -1805,7 +1805,7 @@ const Reviews = () => {
 
 const First30Days = () => {
   return (
-    <section className="py-10 md:py-12 px-6 bg-[#0a111a]">
+    <section className="py-8 md:py-10 px-6 bg-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <Reveal>
           <div className="bg-[#0f1724] border border-slate-800 rounded-3xl p-6 md:p-10 lg:p-12 mb-8">
@@ -1813,7 +1813,7 @@ const First30Days = () => {
               
               <div>
                 <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-3">First 30 Days</div>
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6 text-white">What gets installed before we ever talk about scale</h2>
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-6 text-white">What gets installed before we ever talk about scale</h2>
                 
                 <div className="space-y-3">
                   <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-5">
@@ -1874,12 +1874,12 @@ const LaunchTimeline = () => {
   ];
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-[#0a111a]">
+    <section className="py-8 md:py-10 px-6 bg-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-8 lg:gap-10 mb-8 md:mb-10 items-end">
           <Reveal>
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Launch Timeline</div>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Live in 14 days</h2>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Live in 14 days</h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="text-sm text-slate-400 leading-relaxed">
@@ -1909,13 +1909,13 @@ const LaunchTimeline = () => {
 
 const ROI = () => {
   return (
-    <section id="roi" className="py-10 md:py-12 px-6 bg-[#0a111a]">
+    <section id="roi" className="py-8 md:py-10 px-6 bg-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <Reveal>
           <div className="bg-[#0f1724] border border-slate-800 rounded-3xl p-8 md:p-10 lg:p-12 mb-8">
             <div className="grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-12 mb-10">
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight">The ROI is<br/>obvious when<br/>contracts recur</h2>
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight">The ROI is<br/>obvious when<br/>contracts recur</h2>
               </div>
               <div className="flex items-center">
                 <p className="text-sm text-slate-400 leading-relaxed">
@@ -1952,12 +1952,12 @@ const ROI = () => {
 
 const FitCheck = () => {
   return (
-    <section id="fit-check" className="py-10 md:py-12 px-6 bg-[#0a111a]">
+    <section id="fit-check" className="py-8 md:py-10 px-6 bg-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-8 lg:gap-10 mb-8 md:mb-10 items-end">
           <Reveal>
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Fit Check</div>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Who this is built for</h2>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Who this is built for</h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="text-sm text-slate-400 leading-relaxed">
@@ -2015,13 +2015,13 @@ const FitCheck = () => {
 
 const Guarantee = () => {
   return (
-    <section className="py-10 md:py-12 px-6 bg-[#0a111a]">
+    <section className="py-8 md:py-10 px-6 bg-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <Reveal className="bg-[#0f1724] border border-slate-800 rounded-3xl p-8 md:p-10 lg:p-12 mb-8">
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-12">
             <div>
               <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-3">The Guarantee</div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight tracking-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 leading-tight tracking-tight">
                 <motion.span 
                   animate={{ 
                     color: ['#ffffff', '#2dd4bf', '#ffffff'],
@@ -2033,7 +2033,7 @@ const Guarantee = () => {
                   12 qualified<br/>walkthrough<br/>requests in<br/>30 days
                 </motion.span>
                 <br/>
-                <span className="text-slate-400 text-2xl md:text-3xl mt-2 inline-block">or we keep working<br/>until you do</span>
+                <span className="text-slate-400 text-xl md:text-2xl mt-2 inline-block">or we keep working<br/>until you do</span>
               </h2>
               <p className="text-slate-400 leading-relaxed text-sm">
                 A qualified walkthrough request means a commercial facility inside your approved service area where the decision-maker or authorized contact requests a walkthrough, matches your current service offer, and meets the minimum job criteria we define together before launch.
@@ -2087,11 +2087,11 @@ const Guarantee = () => {
 
 const Pricing = () => {
   return (
-    <section id="pricing" className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#0a111a] to-[#06101d]">
+    <section id="pricing" className="py-8 md:py-10 px-6 bg-gradient-to-b from-[#0a111a] to-[#06101d]">
       <div className="max-w-7xl mx-auto">
         <Reveal className="mb-8 md:mb-10 text-center max-w-2xl mx-auto">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Investment</div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">Three plans. One territory at a time.</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight">Three plans. One territory at a time.</h2>
           <p className="text-sm text-slate-400 leading-relaxed">We only work with one commercial service company per territory, so plan selection depends on how much market coverage and system depth you actually need.</p>
         </Reveal>
 
@@ -2100,7 +2100,7 @@ const Pricing = () => {
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Plan A</div>
             <h3 className="text-xl font-bold mb-3">Single Territory</h3>
             <div className="mb-3">
-              <span className="text-3xl md:text-4xl font-black">$1,200</span>
+              <span className="text-2xl md:text-3xl font-black">$1,200</span>
               <span className="text-slate-400 text-xs font-bold"> / mo + ad spend</span>
             </div>
             <p className="text-xs text-slate-400 mb-6 h-12 leading-relaxed">For operators focused on one market who want the full contract engine installed fast.</p>
@@ -2121,7 +2121,7 @@ const Pricing = () => {
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Plan B</div>
             <h3 className="text-xl font-bold mb-3">Territory Expansion</h3>
             <div className="mb-3">
-              <span className="text-3xl md:text-4xl font-black">$3,200</span>
+              <span className="text-2xl md:text-3xl font-black">$3,200</span>
               <span className="text-slate-400 text-xs font-bold"> / mo + ad spend</span>
             </div>
             <p className="text-xs text-slate-400 mb-6 h-12 leading-relaxed">For operators covering multiple cities or wanting more volume and the strongest path into month 3 SEO.</p>
@@ -2139,7 +2139,7 @@ const Pricing = () => {
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Plan C</div>
             <h3 className="text-xl font-bold mb-3">Market Dominance</h3>
             <div className="mb-3">
-              <span className="text-3xl md:text-4xl font-black">$5,200</span>
+              <span className="text-2xl md:text-3xl font-black">$5,200</span>
               <span className="text-slate-400 text-xs font-bold"> / mo + ad spend</span>
             </div>
             <p className="text-xs text-slate-400 mb-6 h-12 leading-relaxed">For operators who want paid demand now and SEO compounding from day one across a larger market footprint.</p>
@@ -2171,18 +2171,18 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30">
+    <section className="py-8 md:py-10 px-6 bg-gradient-to-b from-[#06101d] to-slate-900/30">
       <div className="max-w-3xl mx-auto">
         <Reveal className="mb-8 md:mb-10 text-center">
           <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">FAQ</div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">Questions buyers usually ask</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight">Questions buyers usually ask</h2>
         </Reveal>
 
         <div className="space-y-3">
           {faqs.map((faq, i) => (
             <Reveal key={i} delay={i * 0.1}>
               <details className="group glass-panel rounded-2xl border-slate-800 [&_summary::-webkit-details-marker]:hidden">
-                <summary className="flex items-center justify-between cursor-pointer p-5 md:p-6 font-bold text-base md:text-lg">
+                <summary className="flex items-center justify-between cursor-pointer p-5 md:p-6 font-bold text-sm md:text-base">
                   {faq.q}
                   <span className="transition group-open:rotate-180 text-amber-400">
                     <ChevronRight size={18} className="group-open:hidden" />
@@ -2204,7 +2204,7 @@ const FAQ = () => {
 
 const CTA = () => {
   return (
-    <section id="cta" className="py-10 md:py-12 px-6 bg-gradient-to-b from-slate-900/30 to-slate-950">
+    <section id="cta" className="py-8 md:py-10 px-6 bg-gradient-to-b from-slate-900/30 to-slate-950">
       <div className="max-w-5xl mx-auto">
         <Reveal className="glass-panel p-10 md:p-16 rounded-3xl border-slate-700/50 bg-gradient-to-br from-slate-800/80 to-slate-900 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/20 rounded-full blur-[80px]"></div>
@@ -2212,7 +2212,7 @@ const CTA = () => {
           
           <div className="relative z-10">
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-3">Next Step</div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">Check if your territory is still available</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight">Check if your territory is still available</h2>
             <p className="text-sm text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
               We will map out what the first 30 days would look like in your market, review your service area, and show you the fastest path to more recurring contract opportunities without relying on referrals alone.
             </p>
@@ -2368,7 +2368,7 @@ const Footer = () => {
   const [legalType, setLegalType] = useState<'terms' | 'fulfillment' | null>(null);
 
   return (
-    <footer className="py-10 md:py-12 px-6 border-t border-slate-800/50 bg-slate-950">
+    <footer className="py-8 md:py-10 px-6 border-t border-slate-800/50 bg-slate-950">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-6 md:gap-10 items-center">
         <div>
           <div className="font-bold text-lg mb-2 flex items-center gap-2.5">
@@ -2466,15 +2466,15 @@ const SystemComponents = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-6 bg-gradient-to-b from-[#06101d] to-[#0a111a]">
+    <section className="py-12 md:py-16 px-6 bg-gradient-to-b from-[#06101d] to-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-8 lg:gap-10 mb-12 md:mb-16 items-end">
           <Reveal>
             <div className="text-teal-400 text-[11px] font-bold tracking-widest uppercase mb-2">What You Get</div>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">Nine components,<br/>done for you</h2>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">Nine components,<br/>done for you</h2>
           </Reveal>
           <Reveal delay={0.2}>
-            <p className="text-base md:text-lg text-slate-400 leading-relaxed">
+            <p className="text-sm md:text-base text-slate-400 leading-relaxed">
               This is built as a system, not a random collection of marketing tasks. Every component exists to help you win more commercial accounts and protect recurring revenue.
             </p>
           </Reveal>
@@ -2564,12 +2564,12 @@ const OperationalProof = () => {
   }, [isDragging, handleMove]);
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-[#0a111a]">
+    <section className="py-8 md:py-10 px-6 bg-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-8 lg:gap-10 mb-8 md:mb-10 items-end">
           <Reveal>
             <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-2">Operational Proof</div>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">See what changes<br/>once the system<br/>is installed</h2>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight">See what changes<br/>once the system<br/>is installed</h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="text-sm text-slate-400 leading-relaxed">
@@ -2667,7 +2667,7 @@ const SeoUpgrade = () => {
   ];
 
   return (
-    <section className="py-10 md:py-12 px-6 bg-gradient-to-b from-slate-900/30 to-[#0a111a]">
+    <section className="py-8 md:py-10 px-6 bg-gradient-to-b from-slate-900/30 to-[#0a111a]">
       <div className="max-w-7xl mx-auto">
         <Reveal>
           <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 md:p-10 lg:p-12 mb-8">
@@ -2675,7 +2675,7 @@ const SeoUpgrade = () => {
               
               <div>
                 <div className="text-amber-400 text-[11px] font-bold tracking-widest uppercase mb-3">Month 3 Upgrade</div>
-                <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">Add SEO once the paid engine shows us what already converts</h2>
+                <h2 className="text-xl md:text-2xl font-bold mb-4 tracking-tight">Add SEO once the paid engine shows us what already converts</h2>
                 <p className="text-sm text-slate-400 mb-6 leading-relaxed">
                   In month 3, we add the Organic Demand Layer so you start building long-term Google visibility around the services, cities, and buyer angles already proven to work. Paid demand gives you speed first. SEO gives you compounding second.
                 </p>
